@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Search</title>
+    <link href="bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-danger">
+        <a class="navbar-brand" href="index.html">Pokémon App</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="search.html">Search</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="details.html">Details</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <img src="photos/Untitled.jpg" class="mw-100 d-block mx-auto my-5">
+    <div class="container my-5">
+        <h2 class="text-center">Search for Pokémon</h2>
+        <form id="searchForm" class="form-inline justify-content-center">
+            <input type="text" id="pokemonName" class="form-control mb-2 mr-sm-2 text-center" placeholder="Enter Pokémon name or ID">
+            <button type="submit" class="btn btn-danger mb-2 d-block mx-auto">Search</button>
+        </form>
+        <div id="pokemonInfo" class="text-center mt-4"></div>
+    </div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const pokemonName = document.getElementById('pokemonName').value.toLowerCase();
+            fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
+                .then(response => response.json())
+                .then(data => {
+                    const pokemonInfo = `
+                        <h3>${data.name.toUpperCase()}</h3>
+                        <img src="${data.sprites.front_default}" alt="${data.name}">
+                        <p>Height: ${data.height}</p>
+                        <p>Weight: ${data.weight}</p>
+                        <p>Type: ${data.types.map(type => type.type.name).join(', ')}</p>
+                    `;
+                    document.getElementById('pokemonInfo').innerHTML = pokemonInfo;
+                })
+                .catch(error => {
+                    document.getElementById('pokemonInfo').innerHTML = `<p class="text-danger">Pokémon not found.</p>`;
+                });
+        });
+    </script>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
